@@ -1,0 +1,374 @@
+<!-- Header navigation bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" style="color:white;">Recipes Book</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+    aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarColor02">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link pointer" (click)="onOpenModal(null!, 'add')">Add Recipe </a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input type="search" (ngModelChange)="searchRecipe(key.value)" #key="ngModel" ngModel name="key" id="searchName"
+        class="form-control mr-sm-2" placeholder="Search recipes..." required>
+    </form>
+  </div>
+</nav>
+
+
+<div class="container" id="main-container">
+
+  <!-- Pagination bar -->
+  <nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [ngClass]="{'disabled': (page?.pageable.pageNumber) == 0}">
+        <a (click)="goToPage('', page?.pageable.pageNumber - 1)" class="page-link">Previous</a>
+      </li>
+
+      <li *ngFor="let pageNumber of [].constructor(page?.totalPages); let i = index;" class="page-item"
+        [ngClass]="{'active': (page?.pageable.pageNumber) == i}">
+        <a (click)="goToPage('', i)" class="page-link">
+          {{ i + 1 }}
+        </a>
+      </li>
+
+      <li class="page-item" [ngClass]="{'disabled': (page?.pageable.pageNumber) == (page?.totalPages) - 1}">
+        <a (click)="goToPage('', page?.pageable.pageNumber + 1)" class="page-link">Next</a>
+      </li>
+    </ul>
+  </nav>
+
+
+  <!-- Recipes list -->
+  <div class="row">
+    <div *ngFor="let recipe of page?.content" class="col-md-6 p-2">
+      <div class="card recipe-card">
+        <div class="card-body">
+          <div class="float-right btn-group btn-group-sm p-1">
+            <a (click)="onOpenModal(recipe, 'edit')" class="btn btn-primary tooltips" data-placement="top"
+              data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+            <a (click)="onOpenModal(recipe, 'delete')" class="btn btn-secondary tooltips" data-placement="top"
+              data-original-title="Delete"><i class="fa fa-times"></i></a>
+          </div>
+        </div>
+        <div class="card-body text-center" (click)="onOpenModal(recipe, 'guide')" data-placement="top"
+          data-original-title="Guide">
+          <div class="d-flex justify-content-center">
+            <img src="assets/default-meal.png" alt="" class="img-fluid rounded-circle w-60">
+          </div>
+          <div class="card-title align-self-center mb-0">
+            <h5>{{recipe.name}}</h5>
+            <p class="m-0">{{recipe.shortDescription}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guide Modal -->
+  <div class="modal fade" id="guideRecipeModal" tabindex="-1" role="dialog" aria-labelledby="guideModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body m-1">
+          <button type="button" class="close text-end" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <div class="d-flex justify-content-center">
+            <img src="assets/default-meal.png" alt="" class="img-fluid w-70">
+          </div>
+          <div class="text-center">
+            <h3 class="modal-title"> {{selectedRecipe?.name}}</h3>
+            <p>{{selectedRecipe?.shortDescription}}</p>
+            <hr />
+          </div>
+          <div>
+            <table class="table table-sm table-striped text-center">
+              <tbody *ngFor="let ingredient of selectedRecipe?.ingredients">
+                <tr>
+                  <td>{{ingredient.name}}</td>
+                  <td>{{ingredient.amount}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <h4>Guide</h4>
+            <p>{{selectedRecipe?.guide}}</p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Recipe Modal -->
+  <div class="modal fade" id="addRecipeModal" tabindex="-1" role="dialog" aria-labelledby="addRecipeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addRecipeModalLabel">Add Recipe</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="onAddRecipe(addForm)">
+            <div class="form-group">
+              <label for="imageUrl">Image URL</label>
+              <input type="text" ngModel name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL">
+            </div>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" ngModel #name="ngModel" name="name" class="form-control" id="name" placeholder="Name"
+                      required minlength="2" maxlength="30">
+                      <!-- name validation -->
+                      <div *ngIf="name.invalid && (name.dirty || name.touched)">
+                        <small *ngIf="name.errors['required']">
+                          Recipe name is required
+                        </small>
+                        <small *ngIf="name.errors['minlength'] || name.errors['maxlength']">
+                          Recipe name must be between 2 and 30 characters
+                        </small>
+                      </div>
+            </div>
+            <div class="form-group">
+              <label for="shortDescription">Short Description</label>
+              <input type="text" ngModel #shortDescription="ngModel" name="shortDescription" class="form-control"
+                    id="shortDescription" placeholder="Short Description"
+                    required minlength="2" maxlength="254">
+                    <!-- description validation -->
+                    <div *ngIf="shortDescription.invalid && (shortDescription.dirty || shortDescription.touched)">
+                      <small *ngIf="shortDescription.errors['required']">
+                        Recipe short description is required
+                      </small>
+                      <small *ngIf="shortDescription.errors['minlength'] || shortDescription.errors['maxlength']">
+                        Recipe short description must be between 2 and 254 characters
+                      </small>
+                    </div>
+            </div>
+            <div class="form-group">
+              <label>Ingredients</label>
+              <div>
+                <table class="table table-sm table-striped text-center">
+                  <tbody *ngFor="let ingredient of ingredientsOnAdd">
+                    <tr>
+                      <td>{{ingredient.name}}</td>
+                      <td>{{ingredient.amount}}</td>
+                      <td class="col-1">
+                        <span class="close" (click)="removeIngredient(ingredient.name)">&times;</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <input type="text" ngModel #nameInput="ngModel" [ngModelOptions]="{standalone: true}"
+                            class="form-control" placeholder="Ingredient Name"
+                            minlength="2" maxlength="30">
+                            <!-- ingridient name validation -->
+                            <div *ngIf="nameInput.invalid && (nameInput.dirty || nameInput.touched)">
+                              <small *ngIf="nameInput.errors['minlength'] || shortDescription.errors['maxlength']">
+                                Ingridient name must be between 2 and 30 characters
+                              </small>
+                            </div>
+                          </div>
+                  <div class="col-md-6">
+                    <input type="text" ngModel #amountInput="ngModel" [ngModelOptions]="{standalone: true}"
+                            class="form-control" placeholder="Amount"
+                            minlength="2" maxlength="30">
+                            <!-- ingridient amount validation -->
+                            <div *ngIf="amountInput.invalid && (amountInput.dirty || amountInput.touched)">
+                              <small *ngIf="amountInput.errors['minlength'] || amountInput.errors['maxlength']">
+                                Ingridient amount must be between 2 and 30 characters
+                              </small>
+                            </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-link" (click)="addIngredient(nameInput, amountInput)">
+                + Add Ingredient
+              </button>
+            </div>
+            <div class="form-group">
+              <label for="guide">Guide</label>
+              <textarea type="text" ngModel #guide="ngModel" name="guide" class="form-control" id="guide" placeholder="Guide"
+                        required minlength="2" maxlength="800"></textarea>
+                        <!-- guide validation -->
+                        <div *ngIf="guide.invalid && (guide.dirty || guide.touched)">
+                          <small *ngIf="guide.errors['required']">
+                            Recipe guide is required
+                          </small>
+                          <small *ngIf="guide.errors['minlength'] || guide.errors['maxlength']">
+                            Recipe guide must be between 2 and 800 characters
+                          </small>
+                        </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="add-recipe-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal fade" id="updateRecipeModal" tabindex="-1" role="dialog" aria-labelledby="recipeEditModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateRecipeModalLabel">Edit Recipe {{selectedRecipe?.name}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+            <input type="hidden" ngModel="{{selectedRecipe?.id}}" name="id" class="form-control" id="id">
+            <div class="form-group">
+              <div class="d-flex justify-content-center">
+                <img src="assets/default-meal.png" alt="" class="img-fluid rounded-circle w-60">
+              </div>
+              <label for="imageUrl">Image URL</label>
+              <input type="text" ngModel="{{selectedRecipe?.imageUrl}}" name="imageUrl" class="form-control"
+                id="imageUrl" placeholder="Image URL">
+            </div>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" ngModel="{{selectedRecipe?.name}}" #editName="ngModel" name="name" class="form-control" id="name" placeholder="Name"
+                    required minlength="2" maxlength="30">
+                    <!-- name validation -->
+                    <div *ngIf="editName.invalid && (editName.dirty || editName.touched)">
+                      <small *ngIf="name.errors['required']">
+                        Recipe name is required
+                      </small>
+                      <small *ngIf="editName.errors['minlength'] || editName.errors['maxlength']">
+                        Recipe name must be between 2 and 30 characters
+                      </small>
+                    </div>
+            </div>
+            <div class="form-group">
+              <label for="shortDescription">Short Description</label>
+              <input type="text" ngModel="{{selectedRecipe?.shortDescription}}" #editShortDesc="ngModel" name="shortDescription"
+                    class="form-control" id="shortDescription" placeholder="Short Description"
+                    required minlength="2" maxlength="254">
+                    <!-- description validation -->
+                    <div *ngIf="editShortDesc.invalid && (editShortDesc.dirty || editShortDesc.touched)">
+                      <small *ngIf="editShortDesc.errors['required']">
+                        Recipe short description is required
+                      </small>
+                      <small *ngIf="editShortDesc.errors['minlength'] || editShortDesc.errors['maxlength']">
+                        Recipe short description must be between 2 and 254 characters
+                      </small>
+                    </div>
+            </div>
+            <div class="form-group">
+              <label>Ingredients</label>
+              <div>
+                <table class="table table-sm table-striped text-center">
+                  <tbody *ngFor="let ingredient of selectedRecipe?.ingredients">
+                    <tr>
+                      <td>{{ingredient.name}}</td>
+                      <td>{{ingredient.amount}}</td>
+                      <td class="col-1">
+                        <span class="close" (click)="removeIngredintOnSelected(ingredient.name)">&times;</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <input type="text" ngModel #nameEditInput="ngModel" [ngModelOptions]="{standalone: true}"
+                          class="form-control" placeholder="Ingredient Name"
+                          minlength="2" maxlength="30">
+                          <!-- ingridient name validation -->
+                          <div *ngIf="nameEditInput.invalid && (nameEditInput.dirty || nameEditInput.touched)">
+                            <small *ngIf="nameEditInput.errors['minlength'] || nameEditInput.errors['maxlength']">
+                              Ingridient name must be between 2 and 30 characters
+                            </small>
+                          </div>
+                  </div>
+                  <div class="col-md-6">
+                    <input type="text" ngModel #amountEditInput="ngModel" [ngModelOptions]="{standalone: true}"
+                          class="form-control" placeholder="Amount"
+                          minlength="2" maxlength="30">
+                          <!-- ingridient amount validation -->
+                          <div *ngIf="amountEditInput.invalid && (amountEditInput.dirty || amountEditInput.touched)">
+                            <small *ngIf="amountEditInput.errors['minlength'] || amountEditInput.errors['maxlength']">
+                              Ingridient amount must be between 2 and 30 characters
+                            </small>
+                          </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-link" (click)="addIngredientToSelected(nameEditInput, amountEditInput)">+ Add
+                Ingredient</button>
+            </div>
+            <div class="form-group">
+              <label for="guide">Guide</label>
+              <textarea type="text" ngModel="{{selectedRecipe?.guide}}" #editGuide="ngModel" name="guide" class="form-control" id="guide" placeholder="Guide"
+                        required minlength="2" maxlength="800"></textarea>
+                        <!-- guide validation -->
+                        <div *ngIf="editGuide.invalid && (editGuide.dirty || editGuide.touched)">
+                          <small *ngIf="editGuide.errors['required']">
+                            Recipe guide is required
+                          </small>
+                          <small *ngIf="editGuide.errors['minlength'] || editGuide.errors['maxlength']">
+                            Recipe guide must be between 2 and 800 characters
+                          </small>
+                        </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" data-dismiss="modal" class="btn btn-secondary">Close</button>
+              <button [disabled]="editForm.invalid" (click)="onUpdateRecipe(editForm)" data-dismiss="modal" class="btn btn-primary"> Save change</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="modal fade" id="deleteRecipeModal" tabindex="-1" role="dialog" aria-labelledby="deleteModelLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModelLabel">Delete Recipe</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete recipe {{selectedRecipe?.name}}?</p>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+            <button (click)="onDeleteRecipe(selectedRecipe?.id!)" class="btn btn-danger"
+              data-dismiss="modal">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification for no recipes -->
+  <div *ngIf="page?.content.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+    <div class="alert alert-info" role="alert">
+      <h4 class="alert-heading">NO RECIPES!</h4>
+      <p>No Recipes were found.</p>
+    </div>
+  </div>
+</div>

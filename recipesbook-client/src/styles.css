@@ -1,0 +1,57 @@
+@import 'https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css';
+@import 'https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css';
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0 0 10px;
+  font-weight: 600;
+}
+
+body {
+  background: #f5f5f5;
+}
+
+i {
+  color: white;
+}
+
+textarea {
+  min-height: 100px;
+}
+
+.navbar {
+  margin-bottom: 30px;
+}
+
+.card {
+  border: none;
+  -webkit-box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+  margin-bottom: 10px;
+}
+
+
+
+.w-60 {
+  width: 60px;
+}
+
+
+.pointer { 
+  cursor: pointer;
+}
+
+/* Recipe item */
+.recipe-card {
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 0 5px #d8d2d280;
+}
+
+.recipe-card:hover  {
+  box-shadow: 0 0 10px #00000080;
+}
