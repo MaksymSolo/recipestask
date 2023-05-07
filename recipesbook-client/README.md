@@ -1,18 +1,21 @@
-#Recipes Book App Web Client
-This project was generated with Angular CLI version 15.2.7.
+# Recipes Book App Web Client
 
-###Development server
-Run ng serve for a dev server. Navigate to http://localhost:4200/. The application will automatically reload if you change any of the source files.
+### Build and deploy
+- Clone this repository to your local machine.
+- Navigate to the recipesbook-client directory.
+- Install the required dependencies by running **npm install**
+- Build project by running **ng build**
+- Start the development server by running **ng serve**
 
-###Code scaffolding
-Run ng generate component component-name to generate a new component. You can also use ng generate directive|pipe|service|class|guard|interface|enum|module.
+This will start the application on http://localhost:4200.
 
-###Build
-Run ng build to build the project. The build artifacts will be stored in the dist/ directory.
+The application will automatically reload if you change any of the source files.
 
-###Building with Docker
+### Building with Docker
 To build the project using Docker, run the following command from the project root directory:
 
--docker build -t recipesbookapp_frontend
+**-docker build -t recipesbookapp_frontend .**
+This will build a Docker image with the name recipesbookapp_frontend
 
-This will build a Docker image with the name recipesbookapp_frontend.
+**-docker run -t recipesbookapp_frontend**
+This will start the application on http://localhost:8080

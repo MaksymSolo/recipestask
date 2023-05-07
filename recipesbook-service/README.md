@@ -6,33 +6,29 @@ To run this application, you will need:
 - JDK 8 or above
 - Maven
 
-### Installation
-Clone this repository to your local machine.
+### Build and deploy
+- Clone this repository to your local machine.
+- Navigate to the recipesbook-service directory.
+- Build and start the application by running **mvn spring-boot:run**
 
-Navigate to the project root directory and run the following command:
+- This will start the backend application on http://localhost:8081.
 
-- mvn spring-boot:run
-- 
-Once the application is running, you can access it at http://localhost:8080.
-
-Usage
-The following endpoints are available in this application:
-
-- GET /api/recipes: Retrieves all recipes
-- GET /api/recipes/{id}: Retrieves a recipe by ID
-- POST /api/recipes: Creates a new recipe
-- PUT /api/recipes/{id}: Updates an existing recipe
-- DELETE /api/recipes/{id}: Deletes a recipe by ID
-
-###Building with Docker
+### Building with Docker
 To build the project using Docker, run the following command from the project root directory:
 
--docker build -t recipesbookapp_backend 
+**-docker build -t recipesbookapp_backend .**
+This will build a Docker image with the name recipesbookapp_frontend
 
-This will build a Docker image with the name recipesbookapp_backend. To run the Docker container, use the following command:
+**-docker run -t  recipesbookapp_backend**
+This will start the application on http://localhost:8081
 
--docker run -p 8080:8080 recipesbookapp_backend
+### API Endpoints
+The following endpoints are available in the backend API:
 
-This will start the container and map the host port 8080 to the container's port 8080. 
+- GET /api/recipes: Retrieves all recipes.
+- GET /api/recipes/{id}: Retrieves a recipe by ID.
+- POST /api/recipes: Creates a new recipe.
+- PUT /api/recipes/{id}: Updates an existing recipe.
+- DELETE /api/recipes/{id}: Deletes a recipe by ID.
 
-You can then access the application at http://localhost:8080.
+
