@@ -5,6 +5,7 @@ This is a web application for managing recipes. It consists of two parts: a fron
 Before running the application, make sure you have the following software installed:
 
 - Docker
+also can be required
 - Node.js 
 - AngularCLI
 - Maven
@@ -19,7 +20,7 @@ To build and run the application using Docker, follow these steps:
 - Build the backend Docker image by running **docker build -t recipesbookapp_backend** . (note the trailing period).
 - **Or skip prev 2 steps** and build the backend Docker the beckend and frontend by **running docker-compose build**.
 - Start the application using Docker Compose by running docker-compose up. This will start the frontend and backend containers, and link them together.
--Once the application is running, you can access it at http://localhost:4200.
+-Once the application is running, you can access it at http://localhost:8080.
 Building and Running the Application Separately
 - If you prefer to build and run the frontend and backend separately, follow these steps:
 
