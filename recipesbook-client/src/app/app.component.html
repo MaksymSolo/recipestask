@@ -235,7 +235,7 @@
         </div>
         <div class="modal-body">
           <form #editForm="ngForm">
-            <input type="hidden" ngModel="{{selectedRecipe?.id}}" name="id" class="form-control" id="id">
+            <input type="hidden" ngModel="{{selectedRecipe?.recipeId}}" name="recipeId" class="form-control" id="recipeId">
             <div class="form-group">
               <div class="d-flex justify-content-center">
                 <img src="assets/default-meal.png" alt="" class="img-fluid rounded-circle w-60">
@@ -356,7 +356,7 @@
           <p>Are you sure you want to delete recipe {{selectedRecipe?.name}}?</p>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-            <button (click)="onDeleteRecipe(selectedRecipe?.id!)" class="btn btn-danger"
+            <button (click)="onDeleteRecipe(selectedRecipe?.recipeId)" class="btn btn-danger"
               data-dismiss="modal">Yes</button>
           </div>
         </div>

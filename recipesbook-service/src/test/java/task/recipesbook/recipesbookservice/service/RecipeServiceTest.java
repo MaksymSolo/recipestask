@@ -6,8 +6,8 @@ import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static util.RandomRecipeGenerator.generateRandomRecipe;
-import static util.RandomRecipeGenerator.generateRandomResipeList;
+import static task.recipesbook.recipesbookservice.util.RandomRecipeGenerator.generateRandomRecipe;
+import static task.recipesbook.recipesbookservice.util.RandomRecipeGenerator.generateRandomResipeList;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,12 +53,14 @@ public class RecipeServiceTest {
 
     @Test
     public void shouldFindRecipeById() {
+        Long idForSearch = 1l;
         Recipe recipe = generateRandomRecipe();
+        recipe.setRecipeId(idForSearch);
         when(recipeRepository.findById(recipe.getRecipeId())).thenReturn(Optional.of(recipe));
 
-        Recipe result = recipeService.findRecipeById(recipe.getRecipeId());
+        Recipe result = recipeService.findRecipeById(idForSearch);
 
-        verify(recipeRepository, times(1)).findById(recipe.getRecipeId());
+        verify(recipeRepository, times(1)).findById(idForSearch);
         assertEquals(recipe, result);
     }
 

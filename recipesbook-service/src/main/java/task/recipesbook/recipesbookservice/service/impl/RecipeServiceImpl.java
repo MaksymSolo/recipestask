@@ -46,6 +46,11 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public Iterable<Recipe> saveAllRecipes(Iterable<Recipe> recipes) {
+        return recipeRepository.saveAll(recipes);
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public Recipe updateRecipe(Recipe recipe) {
         return recipeRepository.save(recipe);

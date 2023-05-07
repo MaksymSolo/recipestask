@@ -1,20 +1,34 @@
-FROM node:lastest
+# Stage 1: Compile and Build angular codebase
+
+# Use official node image as the base image
+FROM node:latest as build
 
 # Set working directory
 WORKDIR /app
 
 # Install dependencies
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm install -g @angular/cli
 
 # Copy project files
 COPY . .
 
 # Build project
-RUN npm run build
+RUN ng build
+
+# Stage 2: Serve app with nginx server
+
+# Use official nginx image as the base image
+FROM nginx:latest
+
+# Copy the build output to replace the default nginx contents.
+COPY --from=build /app/dist/recipesbook-client /usr/share/nginx/html
+
+# Copy nginx configuration file
+COPY default.conf /etc/nginx/default.conf
 
 # Expose port for web server
-EXPOSE 4200
+EXPOSE 80
 
-# Run web server
-CMD ["npm", "start"]
+# Start nginx server
+CMD ["nginx", "-g", "daemon off;"]

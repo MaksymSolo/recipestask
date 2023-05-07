@@ -39,6 +39,14 @@ public interface RecipeService {
     Recipe saveRecipe(Recipe recipe);
 
     /**
+     * Saves a all Recipes.
+     *
+     * @param recipes The Recipes to save.
+     * @return The saved Recipes.
+     */
+    Iterable<Recipe> saveAllRecipes(Iterable<Recipe> recipes);
+
+    /**
      * Updates a Recipe.
      *
      * @param recipe The Recipe to update.

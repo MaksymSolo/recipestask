@@ -6,11 +6,25 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
+import task.recipesbook.recipesbookservice.model.Ingredient;
+import task.recipesbook.recipesbookservice.model.Recipe;
+import task.recipesbook.recipesbookservice.repository.RecipeRepository;
+import task.recipesbook.recipesbookservice.service.RecipeService;
+import task.recipesbook.recipesbookservice.util.RandomIngredientGenerator;
+import task.recipesbook.recipesbookservice.util.RandomRecipeGenerator;
 
 import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static task.recipesbook.recipesbookservice.util.RandomIngredientGenerator.generateRandomIngredientList;
+import static task.recipesbook.recipesbookservice.util.RandomRecipeGenerator.generateRandomRecipe;
 
 /**
  * A component that loads demo data into the application database when the application starts up.
@@ -18,39 +32,40 @@ import java.sql.Statement;
 @Component
 public class DemoDataLoader implements ApplicationRunner {
 
-    private static final String DB_URL = "jdbc:h2:mem:testdb";
-    private static final String DB_USER = "user";
-    private static final String DB_PASSWORD = "user";
-    private static final String DB_SQL_SCRIPT = "classpath:db/data.sql";
-
     /**
-     * The resource loader to use for loading demo data.
+     * The Recipe service to use for loading demo data.
      */
     @Autowired
-    private final ResourceLoader resourceLoader;
+    private final RecipeService recipeService;
 
-    /**
-     * Constructs a new DemoDataLoader with the given ResourceLoader.
-     *
-     * @param resourceLoader The ResourceLoader to use for loading demo data.
-     */
-    public DemoDataLoader(ResourceLoader resourceLoader) {
-        this.resourceLoader = resourceLoader;
+    public DemoDataLoader(RecipeService recipeService) {
+        this.recipeService = recipeService;
     }
 
     /**
-     * Loads demo data into the application database by executing a SQL script from file.
-     *
-     * @param args The ApplicationArguments passed to the application.
-     * @throws Exception if an error occurs while loading the demo data.
+     * Generates random recipes and saves them using the recipeService.
      */
     @Override
-    public void run(ApplicationArguments args) throws Exception {
-        Resource resource = resourceLoader.getResource(DB_SQL_SCRIPT);
-        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             Statement statement = connection.createStatement()) {
-            String sql = new String(Files.readAllBytes(resource.getFile().toPath()));
-            statement.execute(sql);
+    public void run(ApplicationArguments args)  {
+        recipeService.saveAllRecipes(randomRecipes(10));
+    }
+
+    /**
+     * Generates a list of random recipes with random ingredients.
+     *
+     * @param amount The number of recipes to generate.
+     * @return A list of randomly generated recipes.
+     */
+    private List<Recipe> randomRecipes(int amount) {
+        Random random = new Random();
+
+        List<Recipe> recipes = new ArrayList<>(amount);
+        for (int i = 0; i < amount; i++) {
+            Recipe recipe = generateRandomRecipe();
+            List<Ingredient> ingredients = generateRandomIngredientList(random.nextInt(3) + 2);
+            recipe.setIngredients(ingredients);
+            recipes.add(recipe);
         }
+        return recipes;
     }
 }

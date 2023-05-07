@@ -19,8 +19,8 @@ import java.util.Collections;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static util.RandomIngredientGenerator.generateRandomIngredientList;
-import static util.RandomRecipeGenerator.generateRandomRecipe;
+import static task.recipesbook.recipesbookservice.util.RandomIngredientGenerator.generateRandomIngredientList;
+import static task.recipesbook.recipesbookservice.util.RandomRecipeGenerator.generateRandomRecipe;
 
 @WebMvcTest(RecipeController.class)
 public class RecipeControllerTest {
@@ -38,6 +38,7 @@ public class RecipeControllerTest {
         String name = "test"; int page = 1; int size = 5;
         String sortBy = "id_recipe"; Sort.Direction direction = Sort.Direction.DESC;
         Recipe recipe = generateRandomRecipe();
+        recipe.setRecipeId(1L);
         recipe.setIngredients(generateRandomIngredientList(3));
         Page<Recipe> recipesPage = new PageImpl<>(Collections.singletonList(recipe));
         when(recipeService.findAllByName(name, page, size, sortBy, direction)).thenReturn(recipesPage);
@@ -59,10 +60,12 @@ public class RecipeControllerTest {
 
     @Test
     public void shouldGetRecipeById() throws Exception {
+        Long recipeId = 1L;
         Recipe recipe = generateRandomRecipe();
+        recipe.setRecipeId(recipeId);
         when(recipeService.findRecipeById(recipe.getRecipeId())).thenReturn(recipe);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/{id}", recipe.getRecipeId())
+        mockMvc.perform(MockMvcRequestBuilders.get(BASE_URL + "/{id}", recipeId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.recipeId").exists())

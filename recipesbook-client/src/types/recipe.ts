@@ -1,5 +1,5 @@
 export interface Recipe {
-    id: number;
+    recipeId: number;
     name: string;
     shortDescription: string;
     guide: string
@@ -8,6 +8,7 @@ export interface Recipe {
 }
 
 export interface Ingredient {
+    ingredientId: number;
     name: string;
     amount: string;
 }

@@ -1,4 +1,4 @@
-package util;
+package task.recipesbook.recipesbookservice.util;
 
 import task.recipesbook.recipesbookservice.model.Ingredient;
 
@@ -17,7 +17,7 @@ public class RandomIngredientGenerator {
     public static Ingredient generateRandomIngredient() {
         Ingredient ingredient = new Ingredient();
         Random random = new Random();
-        ingredient.setIngredientId(random.nextLong());
+
         ingredient.setName(INGREDIENTS_NAME[random.nextInt(INGREDIENTS_NAME.length)]);
         ingredient.setAmount(random.nextInt(100) + 1 + " grams");
         return ingredient;

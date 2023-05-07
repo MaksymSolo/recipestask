@@ -13,10 +13,10 @@ COPY pom.xml .
 COPY src ./src
 
 # Build the application
-RUN ./mvnw clean install
+RUN ./mvnw clean package -DskipTests
 
 # Expose the port used by the application
-EXPOSE 8080
+EXPOSE 8081
 
 # Start the application
 CMD ["java", "-jar", "target/recipesbook-service.jar"]

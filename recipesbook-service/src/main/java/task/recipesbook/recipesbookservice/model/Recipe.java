@@ -23,7 +23,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "ingredients")
 @Table(name = "recipe")
 @Entity
 public class Recipe {
@@ -51,7 +51,6 @@ public class Recipe {
     @Column(name = "guide", length = 800)
     private String guide;
 
-    @NotEmpty(message = "At least one ingredient is required")
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "recipe_ingredient",

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
-import { throwError, of } from 'rxjs';
+import { of } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { NgForm, NgModel } from '@angular/forms';
 import { Page } from 'src/types/page';
@@ -31,8 +31,6 @@ export class AppComponent implements OnInit {
   // search results based on the given name and page number.
   goToPage(name?: string, pageNumber?: number) {
     this.recipeService.findAllRecipesByName(name, pageNumber + 1).subscribe(response => {
-      console.log(response);
-      
       this.page = response;
     });
   }
@@ -41,16 +39,14 @@ export class AppComponent implements OnInit {
   public loadRecipes() {
     this.recipeService.findAllRecipes().
       subscribe((response: Page) => {
-        console.log(response);
-
         this.page = response;
       });
   }
 
   // Opens detaile guide of selected recipe
-  public onGuideRecipe(recipeId: number) {
+  public onGuideRecipe(id: number) {
     for (let recipe of this.page.content) {
-      if (recipe.id === recipeId) {
+      if (recipe.recipeId === id) {
         this.selectedRecipe = recipe;
         break;
       }
@@ -83,17 +79,16 @@ export class AppComponent implements OnInit {
   // takes in the NgForm object which represents the form data
   // and then update the recipe using the recipeService
   public onUpdateRecipe(editForm: NgForm) {
-    this.recipeService.addRecipe(editForm.value).pipe(
+    const recipe = editForm.value;
+    recipe.ingredients = this.selectedRecipe.ingredients;
+    this.recipeService.updateRecipe(recipe).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error(error);
 
         return of(null);
       })
     ).subscribe(response => {
-      if (response) {
-
-        this.loadRecipes();
-      }
+      this.loadRecipes();
     });
   }
 
@@ -168,10 +163,10 @@ export class AppComponent implements OnInit {
   // Maps ingredient  with spesified in ngModel name and amount 
   // end resets the input fields
   private mapIngredientAndReset(nameInput: NgModel, amountInput: NgModel): Ingredient {
-    const ingredient: Ingredient = { name: nameInput.value, amount: amountInput.value }
+    const ingredient: Ingredient = {ingredientId: null, name: nameInput.value, amount: amountInput.value }
     
-    nameInput.reset;
-    amountInput.reset;
+    nameInput.reset();
+    amountInput.reset();
     return ingredient;
   }
 
