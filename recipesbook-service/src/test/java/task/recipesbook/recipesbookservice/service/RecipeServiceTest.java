@@ -1,6 +1,7 @@
 package task.recipesbook.recipesbookservice.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.times;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import task.recipesbook.recipesbookservice.exception.RecipeNotFoundException;
 import task.recipesbook.recipesbookservice.model.Recipe;
 import task.recipesbook.recipesbookservice.repository.RecipeRepository;
 import task.recipesbook.recipesbookservice.service.impl.RecipeServiceImpl;
@@ -95,5 +97,17 @@ public class RecipeServiceTest {
         recipeService.deleteRecipeById(idForDelete);
 
         verify(recipeRepository, times(1)).deleteById(idForDelete);
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenFindRecipeByIdNotFound() {
+        Long idForSearch = 1L;
+        when(recipeRepository.findById(idForSearch)).thenReturn(Optional.empty());
+
+        assertThrows(RecipeNotFoundException.class, () -> {
+            recipeService.findRecipeById(idForSearch);
+        });
+
+        verify(recipeRepository, times(1)).findById(idForSearch);
     }
 }

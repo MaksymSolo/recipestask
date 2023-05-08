@@ -3,25 +3,14 @@ package task.recipesbook.recipesbookservice.demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import task.recipesbook.recipesbookservice.model.Ingredient;
 import task.recipesbook.recipesbookservice.model.Recipe;
-import task.recipesbook.recipesbookservice.repository.RecipeRepository;
 import task.recipesbook.recipesbookservice.service.RecipeService;
-import task.recipesbook.recipesbookservice.util.RandomIngredientGenerator;
-import task.recipesbook.recipesbookservice.util.RandomRecipeGenerator;
 
-import java.nio.file.Files;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static task.recipesbook.recipesbookservice.util.RandomIngredientGenerator.generateRandomIngredientList;
 import static task.recipesbook.recipesbookservice.util.RandomRecipeGenerator.generateRandomRecipe;
