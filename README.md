@@ -17,7 +17,7 @@ To build and run the application using Docker, follow these steps:
 - Navigate to the project root directory.
 - Start the application using Docker Compose by running docker-compose up --build. (or u can build each image separatly)
 - Once the application is running, you can access it at http://localhost:8080.
-- 
+
 Building and Running the Application Separately without docker
 - If you prefer to build and run the frontend and backend separately, follow these steps:
 
