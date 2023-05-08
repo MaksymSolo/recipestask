@@ -6,6 +6,7 @@ import { NgForm, NgModel } from '@angular/forms';
 import { Page } from 'src/types/page';
 import { Recipe, Ingredient } from 'src/types/recipe';
 import { RecipeService } from 'src/services/recipe.service';
+import { environment } from 'src/environments/environments';
 
 @Component({
   selector: 'app-root',
@@ -59,7 +60,10 @@ export class AppComponent implements OnInit {
   // and then adds the recipe using the recipeService
   public onAddRecipe(addForm: NgForm) {
     addForm.value.ingredients = this.ingredientsOnAdd;
-
+    if(addForm.value.imageUrl = null) {
+      addForm.value.imageUrl = environment.defaultImg;
+    }
+  
     this.recipeService.addRecipe(addForm.value).pipe(
       catchError((error: HttpErrorResponse) => {
         console.error(error);

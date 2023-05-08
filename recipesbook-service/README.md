@@ -16,10 +16,10 @@ To run this application, you will need:
 ### Building with Docker
 To build the project using Docker, run the following command from the project root directory:
 
-**-docker build -t recipesbookapp_backend .**
-This will build a Docker image with the name recipesbookapp_frontend
+-**docker build -t recipesbookapp_backend .**
+This will build a Docker image with the name recipesbookapp_backend
 
-**-docker run -t  recipesbookapp_backend**
+-**docker run -t  recipesbookapp_backend**
 This will start the application on http://localhost:8081
 
 ### API Endpoints

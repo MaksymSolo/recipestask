@@ -4,11 +4,12 @@ import task.recipesbook.recipesbookservice.model.Recipe;
 
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class RandomRecipeGenerator {
+
+    private static final String DEFAULT_IMG_PATH = "assets/default-meal-img.png";
 
     private static final String[] RECIPE_NAMES = {
             "Pasta Carbonara", "Beef Stroganoff", "Chicken Tikka Masala",
@@ -65,7 +66,7 @@ public class RandomRecipeGenerator {
 
         recipe.setName(getRandomRecipeName());
         recipe.setShortDescription(getRandomRecipeDescription());
-        recipe.setImageUrl(UUID.randomUUID().toString());
+        recipe.setImageUrl(DEFAULT_IMG_PATH);
         recipe.setGuide(getRandomRecipeGuide());
         return recipe;
     }
